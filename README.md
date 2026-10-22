@@ -111,8 +111,7 @@ To host it under a sub-path instead, build with
 
 ### Automatic deploys (GitHub Actions)
 
-`deploy/deploy-codecat.yml` is a **proposed** workflow. It is not active until
-you copy it into `.github/workflows/`. It runs only when files under
+`.github/workflows/deploy-codecat.yml` (at the repo root) runs only when files under
 `codecat/**` change on `main` (or when triggered manually), builds only
 `codecat/`, and uploads `codecat/dist/` over FTPS to `./codecat/` on the
 server. That folder is hard-coded in the workflow (not a secret) so a
