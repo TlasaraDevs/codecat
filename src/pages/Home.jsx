@@ -8,6 +8,7 @@ import { Experience } from "@/components/sections/Experience";
 import { Credentials } from "@/components/sections/Credentials";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Blog } from "@/components/sections/Blog";
+import { Contact } from "@/components/sections/Contact";
 
 export const Home = () => {
   const { hash } = useLocation();
@@ -33,6 +34,7 @@ export const Home = () => {
       <Credentials />
       <Testimonials />
       <Blog />
+      <Contact />
     </>
   );
 };
