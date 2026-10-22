@@ -81,17 +81,28 @@ Tlasara portfolios can reuse it. The base URL is `CONTACT_FORM_URL` in
 
 The build is fully static, so no Node server is needed on the host.
 
-1. In DirectAdmin, create the subdomain `codecat.tlasara.dev` and note its
-   document root (typically `domains/tlasara.dev/public_html/codecat/` or
-   `domains/codecat.tlasara.dev/public_html/`, depending on the panel setup).
-2. Enable SSL for the subdomain (Let's Encrypt in DirectAdmin). Then you can
-   uncomment the HTTPS redirect in `public/.htaccess`.
-3. Run `npm run build` and upload the **contents** of `codecat/dist/` (including
-   the hidden `.htaccess`) to that document root.
+The subdomain's document root is `public_html/codecat/`, a folder **inside**
+the tlasara.dev site, and both sites deploy with the same FTP account
+(`deploy@tlasara.dev`, whose FTP root is `public_html/`).
 
-`public/.htaccess` (copied into `dist/`) serves `/blog/...` routes from
-`index.html`, returns the comic 404 page with a real 404 status for unknown
-URLs, and sets caching headers.
+1. Enable SSL for the subdomain (Let's Encrypt in DirectAdmin). Then you can
+   uncomment the HTTPS redirect in `public/.htaccess`.
+2. Run `npm run build` and upload the **contents** of `codecat/dist/` (including
+   the hidden `.htaccess`) to `codecat/` on the FTP account. Never upload it to
+   the FTP root: that is tlasara.dev.
+
+`public/.htaccess` (copied into `dist/`):
+
+- 301-redirects any host other than `codecat.tlasara.dev` to it with the same
+  path, so the copy at `tlasara.dev/codecat/…` is never served;
+- serves `/blog/...` routes from `index.html`, returns the comic 404 page with
+  a real 404 status for unknown URLs, and sets caching headers;
+- blocks the FTP deploy's `.ftp-deploy-sync-state.json` file.
+
+Because `codecat/` sits inside the main site, Apache also applies the main
+site's `public_html/.htaccess` to it. Its rewrite rules don't apply (this
+folder's own `RewriteEngine On` replaces them), but its other directives do.
+See the warning at the top of the repo-root `public/.htaccess`.
 
 The site assumes it is served from the root of its domain (Vite `base: "/"`).
 To host it under a sub-path instead, build with
@@ -103,12 +114,18 @@ To host it under a sub-path instead, build with
 `deploy/deploy-codecat.yml` is a **proposed** workflow. It is not active until
 you copy it into `.github/workflows/`. It runs only when files under
 `codecat/**` change on `main` (or when triggered manually), builds only
-`codecat/`, and uploads `codecat/dist/` over FTPS. Add these repository
-secrets (Settings → Secrets and variables → Actions):
+`codecat/`, and uploads `codecat/dist/` over FTPS to `./codecat/` on the
+server. That folder is hard-coded in the workflow (not a secret) so a
+mistake can't point it at the main site.
 
-| Secret                   | Value                                                                        |
-| ------------------------ | ---------------------------------------------------------------------------- |
-| `CODECAT_FTP_SERVER`     | FTP host, e.g. `ftp.tlasara.dev`                                              |
-| `CODECAT_FTP_USERNAME`   | An FTP account for the subdomain (ideally one locked to its document root)   |
-| `CODECAT_FTP_PASSWORD`   | That account's password                                                      |
-| `CODECAT_FTP_SERVER_DIR` | Path to the document root as that account sees it, ending in `/` (e.g. `./`) |
+It reuses the tlasara.dev deploy's existing secrets (`FTP_SERVER`,
+`FTP_USERNAME`, `FTP_PASSWORD`), so there is nothing new to add.
+
+The two deploys can't interfere with each other:
+
+- The action only uploads and deletes inside its `server-dir`, and only
+  deletes files it uploaded earlier (tracked in a state file in that folder).
+  The codecat deploy is confined to `./codecat/`.
+- The tlasara.dev deploy excludes `codecat/**` from uploads and deletes, and
+  fails before uploading if its build contains a `codecat/` folder.
+- Neither uses `dangerous-clean-slate`, which would empty the folder first.
