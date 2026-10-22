@@ -1,10 +1,13 @@
+import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { LazyMotion, MotionConfig, domAnimation } from "framer-motion";
 import { Layout } from "@/components/layout/Layout";
 import { Home } from "@/pages/Home";
-import { BlogIndex } from "@/pages/BlogIndex";
-import { BlogPost } from "@/pages/BlogPost";
-import { NotFound } from "@/pages/NotFound";
+
+// Secondary pages load on demand to keep the first load small.
+const BlogIndex = lazy(() => import("@/pages/BlogIndex").then((m) => ({ default: m.BlogIndex })));
+const BlogPost = lazy(() => import("@/pages/BlogPost").then((m) => ({ default: m.BlogPost })));
+const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 // Vite's BASE_URL ends with "/"; the router wants it without.
 const basename = import.meta.env.BASE_URL.replace(/\/$/, "") || "/";

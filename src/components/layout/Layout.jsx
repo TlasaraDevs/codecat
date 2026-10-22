@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
@@ -21,7 +21,9 @@ export const Layout = () => {
       </a>
       <Navbar />
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
-        <Outlet />
+        <Suspense fallback={<div className="min-h-[70vh]" />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
     </div>
