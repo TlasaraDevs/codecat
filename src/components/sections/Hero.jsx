@@ -74,7 +74,7 @@ export const Hero = () => {
           </m.h1>
 
           <m.p {...fadeUp(0.2)} className="mt-3 font-display text-3xl text-red sm:text-4xl">
-            {'"code"name '} {developer.handle}
+            {'"code"name '} : {developer.handle}
           </m.p>
 
           <m.div {...fadeUp(0.3)} className="mt-6 min-h-[2rem] font-mono text-lg text-paper sm:text-xl">

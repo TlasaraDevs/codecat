@@ -12,15 +12,15 @@ export const developers = [
     roles: [
       "Web Developer",
       "IT Support",
-      "Aspiring Software Engineer",
+      "Software Engineer",
       "Aspiring Cybersecurity Pro",
     ],
     tagline:
       "I build clean, fast websites, keep systems (and the people using them) running, and I'm levelling up toward secure, thoughtful software.",
     bio: [
-      "Hi, I'm Wanjiru, known online as codecat. I'm a web developer and IT support technician from Nairobi, Kenya, with a BBIT from Strathmore University and a lifelong habit of taking things apart to see how they work.",
-      "Most days I'm building websites or fixing whatever's broken, and I'm working my way toward software engineering and cybersecurity. Machine learning and AI keep pulling me in too. I'm part of Tlasara, a women-focused tech brand building for the web.",
-      "When I'm offline I watch a lot of tech YouTube, dig way too deep into the lore of animated shows, and read everything I can: Substack, novels, poetry and, above all, comics. I also write short stories and poems. My ideal afternoon is lounging outside with my feet in the grass, or reading a novel on public transport on a bright, sunny day.",
+      "Hi, I'm Wanjiru, my codename (haha) is codecat, because I love cats. I'm a web developer and IT support technician from Nairobi, Kenya, with a Bachelor of Business IT from Strathmore University and a lifelong habit of taking things apart to see how they work.",
+      "Most days I'm building websites or fixing whatever's broken, and I'm working my way toward software engineering and cybersecurity. Machine learning and AI keep pulling me in too. I'm building Tlasara, a women-focused tech brand building for the web.",
+      "When I'm offline I watch a lot of tech YouTube, dig way too deep into the lore of animated shows, and read everything I can: Substack, novels, poetry and, above all, comics. I also write short stories and poems. My ideal afternoon is lounging outside with my feet in the grass, possibly with a cat on my lap.",
     ],
     interests: [
       "Comics",
@@ -29,12 +29,13 @@ export const developers = [
       "Novels & poetry",
       "Substack",
       "Tech YouTube",
+      "Cats",
     ],
     location: "Nairobi, Kenya",
     photo_url: "/images/profile.jpg",
     email: "info@tlasara.dev",
     links: {
-      github: "",
+      github: "https://github.com/Mbuthia09",
       linkedin: "https://www.linkedin.com/in/wanjiru-mbuthia-326091233/",
     },
     organization: {
