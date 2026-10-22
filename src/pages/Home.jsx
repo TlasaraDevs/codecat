@@ -6,6 +6,8 @@ import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
 import { Experience } from "@/components/sections/Experience";
 import { Credentials } from "@/components/sections/Credentials";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { Blog } from "@/components/sections/Blog";
 
 export const Home = () => {
   const { hash } = useLocation();
@@ -29,6 +31,8 @@ export const Home = () => {
       <Projects />
       <Experience />
       <Credentials />
+      <Testimonials />
+      <Blog />
     </>
   );
 };
