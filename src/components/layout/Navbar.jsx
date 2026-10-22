@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, m } from "framer-motion";
 import { LuMenu, LuX } from "react-icons/lu";
@@ -21,6 +21,8 @@ const BASE_LINKS = [
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const logo = useRef(null);
+  const replayLogo = () => logo.current?.replay();
   const { data: developer } = useContent(getDeveloper);
   const { data: posts } = useContent(getPosts);
   const { data: testimonials } = useContent(getTestimonials);
@@ -59,8 +61,15 @@ export const Navbar = () => {
       }`}
     >
       <nav aria-label="Main" className="container-page flex h-16 items-center justify-between">
-        <Link to="/" aria-label="codecat — home" onClick={() => setOpen(false)}>
-          <Logo />
+        <Link
+          to="/"
+          aria-label="codecat — home"
+          onClick={() => setOpen(false)}
+          onMouseEnter={replayLogo}
+          onFocus={replayLogo}
+          className="flex items-center py-2"
+        >
+          <Logo ref={logo} />
         </Link>
 
         <ul className="hidden items-center gap-6 md:flex">

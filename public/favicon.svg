@@ -1,5 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0a0a0a"/>
-  <path fill="#e11d2e" d="M11 33 15 7l15 13h4L49 7l4 26c0 13-9.5 22-21 22S11 46 11 33Z"/>
-  <path fill="#0a0a0a" d="M21 34c2-3 6-3 8 0-2 2-6 2-8 0Zm14 0c2-3 6-3 8 0-2 2-6 2-8 0Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102 102">
+  <!-- Tlasara "T" with cat ears (shapes from the repo-root tlasara-T-dark.svg), left ear red. -->
+  <rect width="102" height="102" rx="20" fill="#0a0a0a"/>
+  <polygon fill="#e11d2e" points="24,33 24,10 43,33"/>
+  <polygon fill="#f4efe6" points="78,33 78,10 59,33"/>
+  <rect fill="#f4efe6" x="24" y="32" width="54" height="14"/>
+  <rect fill="#f4efe6" x="44" y="45" width="14" height="47"/>
 </svg>
