@@ -35,7 +35,7 @@ export const developers = [
     email: "info@tlasara.dev",
     links: {
       github: "",
-      linkedin: "",
+      linkedin: "https://www.linkedin.com/in/wanjiru-mbuthia-326091233/",
     },
     organization: {
       name: "Tlasara",
