@@ -32,7 +32,7 @@ export const projects = [
     description:
       "Built with a content layer shaped like database tables so it can move to a Supabase backend without touching the components.",
     tech: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
-    screenshot_url: "",
+    screenshot_url: "/images/portfolio.png",
     github_url: "",
     live_url: "https://codecat.tlasara.dev",
     status: "shipped",
