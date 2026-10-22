@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { scrollToSection } from "@/lib/scroll";
+import { Hero } from "@/components/sections/Hero";
 
 export const Home = () => {
   const { hash } = useLocation();
@@ -17,5 +18,9 @@ export const Home = () => {
     return () => cancelAnimationFrame(frame);
   }, [hash]);
 
-  return <>{/* sections */}</>;
+  return (
+    <>
+      <Hero />
+    </>
+  );
 };
