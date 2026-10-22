@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { scrollToSection } from "@/lib/scroll";
 import { Hero } from "@/components/sections/Hero";
+import { About } from "@/components/sections/About";
 
 export const Home = () => {
   const { hash } = useLocation();
@@ -21,6 +22,7 @@ export const Home = () => {
   return (
     <>
       <Hero />
+      <About />
     </>
   );
 };
