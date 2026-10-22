@@ -36,7 +36,9 @@ export const ProjectCard = ({ project, index = 0 }) => {
     >
       <div className="relative aspect-video border-b-[3px] border-black">
         <Screenshot src={screenshot_url} title={title} />
-        <StatusBadge status={status} className="absolute -right-4 -top-6 rotate-6" />
+        <span className="absolute -right-4 -top-6 rotate-6">
+          <StatusBadge status={status} />
+        </span>
       </div>
 
       <div className="halftone relative flex flex-1 flex-col p-6 pt-0">

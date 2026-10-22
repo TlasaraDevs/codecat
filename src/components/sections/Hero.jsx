@@ -114,12 +114,12 @@ export const Hero = () => {
           initial={{ opacity: 0, rotate: 0, scale: 0.95 }}
           animate={{ opacity: 1, rotate: 2, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-          className="relative mx-auto w-full max-w-sm"
+          className="relative mx-auto w-full max-w-[16rem] sm:max-w-xs md:max-w-sm"
         >
           <ProfilePhoto src={developer.photo_url} name={developer.name} />
           <span
             aria-hidden="true"
-            className="absolute -bottom-5 -left-5 -rotate-6 border-2 border-black bg-red-deep px-3 py-1 font-display text-2xl text-paper shadow-[3px_3px_0_0_#000]"
+            className="absolute -bottom-5 -left-3 -rotate-6 md:-left-5 border-2 border-black bg-red-deep px-3 py-1 font-display text-2xl text-paper shadow-[3px_3px_0_0_#000]"
           >
             MEOW!
           </span>

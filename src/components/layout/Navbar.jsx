@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, m } from "framer-motion";
 import { LuMenu, LuX } from "react-icons/lu";
 import { getDeveloper, getPosts, getTestimonials } from "@/lib/content";
@@ -27,7 +27,9 @@ export const Navbar = () => {
 
   const available = { posts: posts?.length > 0, testimonials: testimonials?.length > 0 };
   const links = BASE_LINKS.filter((link) => !link.when || available[link.when]);
-  const active = useActiveSection(["home", ...links.map((l) => l.id)]);
+  const activeSection = useActiveSection(["home", ...links.map((l) => l.id)]);
+  // Section highlighting only makes sense on the home page.
+  const active = useLocation().pathname === "/" ? activeSection : null;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
