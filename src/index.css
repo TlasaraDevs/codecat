@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+/*
+ * Theme tokens — change the palette here and every component follows.
+ * Contrast notes (on --color-ink):
+ *   paper text 17:1 · muted text 7.8:1 · red-bright text 5.5:1
+ *   paper text on red-deep fill 5.1:1
+ * Use --color-red for decoration (shadows, borders, large display text),
+ * --color-red-bright for small red text, --color-red-deep for button fills.
+ */
+@theme {
+  --color-ink: #0a0a0a;
+  --color-coal: #121212;
+  --color-panel: #161616;
+  --color-edge: #2a2a2a;
+  --color-paper: #f4efe6;
+  --color-muted: #a8a29e;
+  --color-red: #e11d2e;
+  --color-red-bright: #ff3344;
+  --color-red-deep: #c8102e;
+
+  --font-display: "Bangers", "Impact", "Arial Black", system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+
+  --shadow-comic: 6px 6px 0 0 var(--color-red);
+  --shadow-comic-sm: 4px 4px 0 0 var(--color-red);
+  --shadow-comic-lg: 10px 10px 0 0 var(--color-red);
+
+  --animate-blink: blink 1s steps(1) infinite;
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    @apply bg-ink text-paper font-sans antialiased;
+  }
+
+  /* Sections sit under a sticky navbar. */
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-red-bright);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-red-deep);
+    color: var(--color-paper);
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (width >= 768px) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Comic-book halftone dots; tint with `color` or the --dot variable. */
+@utility halftone {
+  background-image: radial-gradient(
+    var(--dot, rgb(255 255 255 / 0.07)) 1px,
+    transparent 1.4px
+  );
+  background-size: 7px 7px;
+}
+
+@utility halftone-red {
+  --dot: rgb(225 29 46 / 0.28);
+  background-image: radial-gradient(var(--dot) 1.2px, transparent 1.6px);
+  background-size: 8px 8px;
+}
+
+/* A thick ink-bordered comic panel with a hard red offset shadow. */
+@utility comic-panel {
+  position: relative;
+  background-color: var(--color-panel);
+  border: 3px solid #000;
+  outline: 1px solid var(--color-edge);
+  box-shadow: var(--shadow-comic);
+}
+
+/* Narration caption box (the yellow box in comics — paper-coloured here). */
+@utility comic-caption {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 0 #000;
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  font-weight: 400;
+}
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  font-weight: 700;
+  border: 3px solid #000;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+
+  &:hover {
+    transform: translate(-2px, -2px);
+  }
+
+  &:active {
+    transform: translate(2px, 2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+@utility btn-primary {
+  background-color: var(--color-red-deep);
+  color: var(--color-paper);
+  box-shadow: 4px 4px 0 0 var(--color-paper);
+
+  &:hover {
+    box-shadow: 6px 6px 0 0 var(--color-paper);
+  }
+}
+
+@utility btn-ghost {
+  background-color: transparent;
+  color: var(--color-paper);
+  border-color: var(--color-paper);
+  box-shadow: var(--shadow-comic-sm);
+
+  &:hover {
+    box-shadow: var(--shadow-comic);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
