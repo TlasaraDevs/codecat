@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { scrollToSection } from "@/lib/scroll";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
+import { Projects } from "@/components/sections/Projects";
 
 export const Home = () => {
   const { hash } = useLocation();
@@ -23,6 +24,7 @@ export const Home = () => {
     <>
       <Hero />
       <About />
+      <Projects />
     </>
   );
 };
