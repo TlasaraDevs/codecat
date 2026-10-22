@@ -4,6 +4,8 @@ import { scrollToSection } from "@/lib/scroll";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
+import { Experience } from "@/components/sections/Experience";
+import { Credentials } from "@/components/sections/Credentials";
 
 export const Home = () => {
   const { hash } = useLocation();
@@ -25,6 +27,8 @@ export const Home = () => {
       <Hero />
       <About />
       <Projects />
+      <Experience />
+      <Credentials />
     </>
   );
 };
