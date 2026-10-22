@@ -4,6 +4,17 @@ Options -MultiViews -Indexes
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # This folder is public_html/codecat/ inside the main site, so the same
+  # files are also reachable at tlasara.dev/codecat/ (and any other host
+  # pointing here). Send every host except the subdomain to the canonical
+  # URL, keeping the path: tlasara.dev/codecat/blog/x →
+  # https://codecat.tlasara.dev/blog/x. The query string is kept too.
+  RewriteCond %{HTTP_HOST} !^codecat\.tlasara\.dev(:[0-9]+)?$ [NC]
+  RewriteRule ^(.*)$ https://codecat.tlasara.dev/$1 [R=301,L]
+
+  # (tlasara.dev/codecat without the trailing slash is handled by the
+  # RedirectMatch below, before Apache would add the slash itself.)
+
   # Uncomment to force HTTPS once the subdomain's SSL certificate is active.
   # RewriteCond %{HTTPS} off
   # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -13,6 +24,20 @@ Options -MultiViews -Indexes
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^blog(/.*)?$ index.html [L]
 </IfModule>
+
+# Rewrite rules never see this folder's own URL without its trailing slash, so
+# Apache would first redirect tlasara.dev/codecat → http://tlasara.dev/codecat/.
+# Go straight to the subdomain instead, in one hop.
+<IfModule mod_alias.c>
+  <If "%{HTTP_HOST} !~ /^codecat\.tlasara\.dev(:[0-9]+)?$/i">
+    RedirectMatch 301 ^/codecat$ https://codecat.tlasara.dev/
+  </If>
+</IfModule>
+
+# The FTP deploy keeps a state file listing every uploaded file; don't serve it.
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>
 
 # Anything else that doesn't exist gets the app (which shows the comic 404
 # page) with a real 404 status, so search engines don't index it.
