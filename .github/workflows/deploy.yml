@@ -23,6 +23,11 @@ jobs:
     # first run would pick up codecat's state file on the server and
     # overwrite codecat.tlasara.dev.
     if: github.repository == 'TlasaraDevs/codecat'
+    # The five secrets below are environment secrets of "production", which
+    # requires a reviewer's approval (Mbuthia09) before this job starts and
+    # only allows the main branch. Keep them out of repository secrets, or a
+    # workflow without this line could use them unapproved.
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
