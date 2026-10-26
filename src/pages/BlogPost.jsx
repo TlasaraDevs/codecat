@@ -1,29 +1,53 @@
 import { Link, useParams } from "react-router-dom";
 import { LuArrowLeft } from "react-icons/lu";
+import Markdown from "react-markdown";
 import { getPostBySlug } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 import { useContent } from "@/hooks/useContent";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { NotFound } from "./NotFound";
 
-// Renders plain-text post content: blank lines split paragraphs and lines
-// starting with "## " become subheadings. Output is text, never raw HTML.
-const PostBody = ({ content }) =>
-  content
-    .split(/\n\s*\n/)
-    .map((block) => block.trim())
-    .filter(Boolean)
-    .map((block, i) =>
-      block.startsWith("## ") ? (
-        <h2 key={i} className="mt-10 font-display text-3xl text-paper">
-          {block.slice(3)}
-        </h2>
-      ) : (
-        <p key={i} className="mt-5 whitespace-pre-line">
-          {block}
-        </p>
-      )
-    );
+// Post content is Markdown. Raw HTML in it is dropped (skipHtml) and unsafe
+// link targets such as javascript: are removed (react-markdown's default
+// urlTransform), so it is safe to render user-written posts.
+const external = (href = "") => /^https?:\/\//.test(href);
+
+const MARKDOWN_COMPONENTS = {
+  // The post title is the page's only h1.
+  h1: ({ children }) => <h2 className="mt-10 font-display text-3xl text-paper">{children}</h2>,
+  h2: ({ children }) => <h2 className="mt-10 font-display text-3xl text-paper">{children}</h2>,
+  h3: ({ children }) => <h3 className="mt-8 text-xl font-bold text-paper">{children}</h3>,
+  h4: ({ children }) => <h4 className="mt-6 font-bold text-paper">{children}</h4>,
+  p: ({ children }) => <p className="mt-5">{children}</p>,
+  ul: ({ children }) => <ul className="mt-5 list-disc space-y-2 pl-6">{children}</ul>,
+  ol: ({ children }) => <ol className="mt-5 list-decimal space-y-2 pl-6">{children}</ol>,
+  blockquote: ({ children }) => (
+    <blockquote className="mt-5 border-l-4 border-red pl-4 italic text-paper/80">{children}</blockquote>
+  ),
+  a: ({ href, children }) => (
+    <a
+      href={href}
+      className="font-semibold text-red-bright underline underline-offset-4"
+      {...(external(href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {children}
+    </a>
+  ),
+  code: ({ children }) => <code className="border border-edge bg-ink px-1.5 py-0.5 text-[0.9em]">{children}</code>,
+  pre: ({ children }) => (
+    <pre className="comic-panel mt-5 overflow-x-auto p-4 text-sm [&_code]:border-0 [&_code]:bg-transparent [&_code]:p-0">
+      {children}
+    </pre>
+  ),
+  img: ({ src, alt }) => <img src={src} alt={alt ?? ""} loading="lazy" className="comic-panel mt-5 w-full" />,
+  hr: () => <hr className="my-10 border-edge" />,
+};
+
+const PostBody = ({ content }) => (
+  <Markdown skipHtml components={MARKDOWN_COMPONENTS}>
+    {content}
+  </Markdown>
+);
 
 export const BlogPost = () => {
   const { slug } = useParams();

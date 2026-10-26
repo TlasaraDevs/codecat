@@ -1,9 +1,9 @@
 // Table: posts — the blog link and section only appear when at least one row
 // for this developer has published: true.
 //
-// `content` is plain text: blank lines separate paragraphs, and a line
-// starting with "## " becomes a subheading. It is rendered as text (never as
-// HTML), so it is safe to store user-written content here.
+// `content` is Markdown (blank lines separate paragraphs, "## " makes a
+// subheading). Raw HTML in it is never rendered, so user-written content is
+// safe here.
 export const posts = [
   {
     id: 1,
