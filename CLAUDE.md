@@ -21,6 +21,14 @@ The server is shared: one FTP account (`deploy@tlasara.dev`) whose root is
 - `.github/workflows/deploy.yml` uploads `./dist/` to `server-dir: ./codecat/`.
   Keep `server-dir` **hard-coded** (never a secret or variable). `./` would
   overwrite tlasara.dev.
+- The deploy job only runs when `github.repository == 'TlasaraDevs/codecat'`.
+  Keep it: a portfolio created from this repo must change that line together
+  with `server-dir`, or its first deploy would overwrite this site.
+- The job runs in the `production` environment (`environment: production`),
+  which requires Mbuthia09's approval and allows only `main`. All five
+  secrets (`FTP_*`, `VITE_SUPABASE_*`) are **environment** secrets; never
+  add them as repository secrets, and never remove the `environment` line.
+  `VITE_DEVELOPER_SLUG` stays in the workflow (not a secret).
 - Never set `dangerous-clean-slate`: it empties the target folder first.
 - Keep the "Check build output" step: a build without `dist/.htaccess` would
   drop the redirect that hides the `tlasara.dev/codecat/` copy.

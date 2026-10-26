@@ -147,7 +147,16 @@ manually): it installs, lints, builds, checks the build output and uploads
 `dist/` over FTPS to `./codecat/` on the server. That folder is hard-coded in
 the workflow (not a secret) so a mistake can't point it at tlasara.dev.
 
-Repository secrets:
+Every run **waits for approval**: the job uses the `production` environment
+(Settings → Environments), whose required reviewer is Mbuthia09 and which
+only allows the `main` branch. Approve it from the run's page ("Review
+deployments"). The whole job, including lint and build, starts only after
+approval; a newer push cancels a run that is still waiting.
+
+The job also only runs in `TlasaraDevs/codecat` itself. A portfolio created
+from this repository must change that check together with `server-dir`.
+
+Secrets of the `production` environment (not repository secrets):
 
 | Secret | Value |
 | --- | --- |
