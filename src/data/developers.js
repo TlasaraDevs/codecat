@@ -1,4 +1,7 @@
 // Table: developers — one row per developer on the Tlasara platform.
+// Offline fallback only: the live site reads the developers table (see
+// src/lib/content.js). `email` here is the public address (public_email in
+// the database); `organization` comes from src/config.js.
 // photo_url may be a path under public/ (e.g. "/images/x.jpg") or a full URL.
 // Empty strings in `links` mean "not available yet": the UI shows the icon
 // disabled with a "coming soon" tooltip.
@@ -37,11 +40,6 @@ export const developers = [
     links: {
       github: "https://github.com/Mbuthia09",
       linkedin: "https://www.linkedin.com/in/wanjiru-mbuthia-326091233/",
-    },
-    organization: {
-      name: "Tlasara",
-      url: "https://tlasara.dev",
-      description: "a women-focused tech brand",
     },
   },
 ];

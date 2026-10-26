@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, m } from "framer-motion";
 import { LuMenu, LuX } from "react-icons/lu";
+import { SITE_NAME } from "@/config";
 import { getDeveloper, getPosts, getTestimonials } from "@/lib/content";
 import { buildWorkWithMeUrl } from "@/lib/contact";
 import { useContent } from "@/hooks/useContent";
@@ -63,7 +64,7 @@ export const Navbar = () => {
       <nav aria-label="Main" className="container-page flex h-16 items-center justify-between">
         <Link
           to="/"
-          aria-label="codecat — home"
+          aria-label={`${SITE_NAME} — home`}
           onClick={() => setOpen(false)}
           onMouseEnter={replayLogo}
           onFocus={replayLogo}
