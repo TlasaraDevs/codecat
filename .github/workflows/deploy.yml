@@ -17,6 +17,12 @@ concurrency:
 
 jobs:
   deploy:
+    # Only this repository deploys to ./codecat/. A portfolio created from
+    # this one (template or copy) skips the deploy until it changes this line
+    # to its own repository TOGETHER WITH server-dir below. Otherwise its
+    # first run would pick up codecat's state file on the server and
+    # overwrite codecat.tlasara.dev.
+    if: github.repository == 'TlasaraDevs/codecat'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -63,5 +69,6 @@ jobs:
           # Hard-coded on purpose, not a secret: the action uploads and
           # deletes only inside server-dir, so this pins the deploy to the
           # subdomain's folder. "./" here would overwrite tlasara.dev.
+          # Change only together with the repository check on the job.
           server-dir: ./codecat/
           # Never set dangerous-clean-slate.
