@@ -14,14 +14,15 @@ An admin does this in the dashboard (Developers → Invite). Until the dashboard
 exists, in the Supabase SQL editor:
 
 ```sql
-insert into public.developers (slug, name, handle, email, portfolio_url, is_active)
-values ('<slug>', 'Full Name', '<handle>', 'them@example.com', 'https://<slug>.tlasara.dev', true);
+insert into public.developers (slug, name, handle, email, portfolio_url)
+values ('<slug>', 'Full Name', '<handle>', 'them@example.com', 'https://<slug>.tlasara.dev');
 ```
 
-- `is_active` must be true, or the site shows nothing and the developer can't
-  edit their content.
+- New developers start **active but unlisted**: they can sign in and fill in
+  their content, but nothing is public yet. Their site shows an empty page
+  until an admin sets `is_listed = true`.
 - `portfolio_url` must be the real address: page views are accepted only from
-  `tlasara.dev` and the hosts of active developers' `portfolio_url`s.
+  `tlasara.dev` and the hosts of listed developers' `portfolio_url`s.
 
 ## 2. Copy the app
 
