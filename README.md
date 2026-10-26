@@ -6,7 +6,11 @@ completely separate app with its own `package.json`, so it never touches the
 company site at the repo root.
 
 Stack: React 19 · Vite 6 · Tailwind CSS 4 · Framer Motion · react-icons ·
-React Router. Fonts (Bangers + Inter) are self-hosted via Fontsource.
+React Router · Supabase (content) · react-markdown (posts). Fonts (Bangers +
+Inter) are self-hosted via Fontsource.
+
+To build another developer's portfolio from this app, see
+[TEMPLATE.md](TEMPLATE.md).
 
 ## Run it locally
 
@@ -24,12 +28,23 @@ Other scripts:
 | `npm run preview` | Serves the built `dist/` locally to check it   |
 | `npm run lint`    | ESLint                                         |
 
-No environment variables are needed today. `.env.example` lists the ones
-Phase 2 (Supabase) will add; copy it to `.env`, which is git-ignored. Never commit `.env`.
+Environment variables (all optional; copy `.env.example` to `.env`, which is
+git-ignored, and never commit it):
+
+| Variable | Value |
+| --- | --- |
+| `VITE_SUPABASE_URL` | The shared Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Its **publishable** key (never a secret or service-role key; the build refuses one) |
+| `VITE_DEVELOPER_SLUG` | `codecat` (the default) |
+
+Without the Supabase values the site shows the local content in `src/data/`.
 
 ## Editing content
 
-All content lives in `src/data/`, one file per future database table:
+Content lives in the shared Supabase database and is edited in the admin
+dashboard. `src/data/` holds a copy that the site shows when Supabase is not
+configured or can't be reached (free projects pause when idle), one file per
+table. Keep it roughly in step with the database:
 
 | File              | Table          | Notes                                                       |
 | ----------------- | -------------- | ----------------------------------------------------------- |
@@ -52,17 +67,29 @@ and the card shows a placeholder panel or hides that button.
 (a portrait around 640×800 works best). Until it exists, the hero shows a
 "Photo coming soon…" panel.
 
-**Blog posts:** `content` is plain text. Blank lines separate paragraphs and a
-line starting with `## ` becomes a subheading. When you publish a post, also
-add its URL to `public/sitemap.xml`.
+**Blog posts:** `content` is Markdown. Raw HTML in it is never rendered and
+`javascript:` links are removed. When you publish a post, also add its URL to
+`public/sitemap.xml`.
 
-### How the data layer works (and Phase 2)
+### How the data layer works
 
-Components never import `src/data/` directly. They call async getters in
-`src/lib/content.js` (`getDeveloper()`, `getProjects()`, `getPosts()`, …)
-through the `useContent()` hook. To move to Supabase, rewrite only the bodies
-of those getters to query the matching tables and return the same shapes.
-Nothing else changes.
+Components never import `src/data/` or Supabase directly. They call async
+getters in `src/lib/content.js` (`getDeveloper()`, `getProjects()`,
+`getPosts()`, …) through the `useContent()` hook. Each getter reads the
+matching `public_*` view in Supabase (only published, approved or active rows,
+without private columns), maps it to the shape the components use, and falls
+back to `src/data/` if Supabase is unconfigured, fails or takes over 4
+seconds. After one failure the rest of the visit uses local content straight
+away. Nothing sensitive is logged; in development a single warning says the
+fallback is in use.
+
+### Page views
+
+`src/lib/analytics.js` records one page view per page load, after the page
+has rendered: host name, path (no query string), developer slug and the
+referring site's host name. No cookies, IDs or IP addresses. It skips
+development builds, bots and automated browsers, and visitors with Do Not
+Track or Global Privacy Control on.
 
 ### "Work with me" links
 
@@ -117,8 +144,11 @@ To host it under a sub-path instead, build with
 server. That folder is hard-coded in the workflow (not a secret) so a
 mistake can't point it at the main site.
 
-It reuses the tlasara.dev deploy's existing secrets (`FTP_SERVER`,
-`FTP_USERNAME`, `FTP_PASSWORD`), so there is nothing new to add.
+It reuses the tlasara.dev deploy's FTP secrets (`FTP_SERVER`, `FTP_USERNAME`,
+`FTP_PASSWORD`) and builds with the repository secrets `VITE_SUPABASE_URL` and
+`VITE_SUPABASE_ANON_KEY` (the publishable key). `VITE_DEVELOPER_SLUG` is set
+in the workflow itself. If the Supabase secrets are missing, the run warns and
+the site shows its local content.
 
 The two deploys can't interfere with each other:
 
