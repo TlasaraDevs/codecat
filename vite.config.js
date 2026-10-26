@@ -24,12 +24,32 @@ const assertPublicSupabaseKey = (key) => {
   }
 };
 
+// The project URL must be the bare origin (https://<ref>.supabase.co).
+// supabase-js adds /rest/v1 itself, so a URL copied with that path makes
+// every query fail and the site silently fall back to local content.
+const assertSupabaseUrl = (value) => {
+  if (!value) return;
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("VITE_SUPABASE_URL is not a valid URL.");
+  }
+  if (url.protocol !== "https:" || (url.pathname !== "/" && url.pathname !== "") || url.search || url.hash) {
+    throw new Error(
+      "VITE_SUPABASE_URL must be just the project URL, https://<project-ref>.supabase.co, with no path such as /rest/v1/."
+    );
+  }
+};
+
 // The site is served from the root of its own subdomain (codecat.tlasara.dev),
 // so "/" is the correct base. Absolute asset paths are required for deep links
 // such as /blog/my-post to load their assets. To host under a sub-path instead,
 // build with CODECAT_BASE=/some/path/ — the router picks it up automatically.
 export default defineConfig(({ mode }) => {
-  assertPublicSupabaseKey(loadEnv(mode, process.cwd(), "VITE_").VITE_SUPABASE_ANON_KEY);
+  const env = loadEnv(mode, process.cwd(), "VITE_");
+  assertSupabaseUrl(env.VITE_SUPABASE_URL);
+  assertPublicSupabaseKey(env.VITE_SUPABASE_ANON_KEY);
 
   return {
     base: process.env.CODECAT_BASE || "/",
