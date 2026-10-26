@@ -1,0 +1,67 @@
+# Deploys this portfolio to codecat.tlasara.dev.
+#
+# It uses the same FTP account as the tlasara.dev deploy (deploy@tlasara.dev,
+# whose FTP root is public_html/) and only ever writes inside ./codecat/,
+# the codecat.tlasara.dev document root.
+name: Deploy codecat portfolio
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two codecat deploys at once; a newer push cancels an older run.
+concurrency:
+  group: deploy-codecat
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+      - run: npm run lint
+
+      # The Supabase URL and publishable key are public (they end up in the
+      # bundle) but are kept as secrets so they're managed in one place. Never
+      # put the service-role key here: vite.config.js refuses to build with
+      # it, or with a URL that has a path. Without them the site still builds
+      # and shows its local content.
+      - name: Build
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "::warning::Supabase secrets are not set; the site will show its local content files."
+          fi
+          npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          # Not a secret: which developer this portfolio shows.
+          VITE_DEVELOPER_SLUG: codecat
+
+      # The .htaccess carries the redirect that stops the site being served
+      # at tlasara.dev/codecat/; never deploy a build without it.
+      - name: Check build output
+        run: test -f dist/index.html && test -f dist/.htaccess
+
+      - name: Upload to codecat.tlasara.dev
+        uses: SamKirkland/FTP-Deploy-Action@110f9186c050f71550953127052e77650219c287 # v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          # Hard-coded on purpose, not a secret: the action uploads and
+          # deletes only inside server-dir, so this pins the deploy to the
+          # subdomain's folder. "./" here would overwrite tlasara.dev.
+          server-dir: ./codecat/
+          # Never set dangerous-clean-slate.
